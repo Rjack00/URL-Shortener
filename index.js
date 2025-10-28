@@ -34,6 +34,21 @@ app.use((req, res, next) => {
   next();
 });
 
+//Helper function to validate URL format
+function isValidUrl (urlString) {
+  try {
+    const url = new URL(urlString);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch (err) {
+    return false;
+  }
+}
+
+
+
+const urlDataBase = {};
+let urlCounter = 0;
+
 app.get('/api/shorturl', (req, res) => {
   
 })
