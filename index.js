@@ -25,7 +25,7 @@ app.use(express.json());
 
 
 // Middleware to see (help visualize as I learn) request object items for GET and POST
-app.use((req, res, next) => { 
+const logRequest = (req, res, next) => { 
   console.log({
     path: req.path,
     params: req.params,
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
     headers: req.headers,
   });
   next();
-});
+};
 
 // URL shortner \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -52,7 +52,7 @@ function isValidUrl (urlString) {
 const urlDatabase = {};
 let urlCounter = 1;
 
-app.post('/api/shorturl', (req, res) => {
+app.post('/api/shorturl', logRequest, (req, res) => {
   const originalUrl = req.body.url;
 
   // validate the URL
@@ -73,23 +73,23 @@ app.post('/api/shorturl', (req, res) => {
   } 
 
   //create new short URL
-  const shortUrl = urlCounter;
-  urlDatabase[shortUrl] = originalUrl;
+  const shorturl = urlCounter;
+  urlDatabase[shorturl] = originalUrl;
   urlCounter++;
 
   res.json({
     original_url : originalUrl,
-    short_url : shortUrl
+    short_url : shorturl
   })
   
 });
 
-app.get('/api/shorturl/:short_url', (req, res) => {
-  const shortUrl = req.params.short_url;
-  console.log('shortUrl: ', shortUrl);
-  console.log('urlDatabase: ', shortUrl);
+app.get('/api/shorturl/:short_url', logRequest, (req, res) => {
+  const shorturl = req.params.short_url;
+  console.log('shorturl: ', shorturl);
+  console.log('urlDatabase: ', shorturl);
 
-  const originalUrl= urlDatabase[shortUrl];
+  const originalUrl= urlDatabase[shorturl];
   console.log('Found URL:', originalUrl);
 
   if (!originalUrl) {
